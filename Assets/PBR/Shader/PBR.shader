@@ -63,12 +63,15 @@
             #pragma shader_feature _ _ALPHATEST_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON
             #pragma shader_feature _EMISSION
             #pragma shader_feature _SPECGLOSSMAP
+            #pragma shader_feature ___ _DETAIL_MULX2
             #pragma shader_feature _ _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
             #pragma shader_feature _ _SPECULARHIGHLIGHTS_OFF
             #pragma shader_feature _ _GLOSSYREFLECTIONS_OFF
+            #pragma shader_feature _PARALLAXMAP
 
             #pragma multi_compile_fwdbase
             #pragma multi_compile_fog
+            #pragma multi_compile_instancing
             
             #pragma vertex vertForwardBase
             #pragma fragment fragForwardBase
