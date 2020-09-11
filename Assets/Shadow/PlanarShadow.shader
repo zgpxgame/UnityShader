@@ -14,7 +14,8 @@
         
         _Roughness("Roughness", 2D) = "white" {}
         
-        _ShadowFalloff("", Range(0.0, 1.0)) = 0.2
+        //_ShadowFalloff("ShadowFalloff", Range(0.0, 1.0)) = 0.5
+        _ShadowStrength("ShadowStrength", Range(0.0, 1.0)) = 0.5
         _GroundHeight("GroundHeight", Float) = 0
     }
     SubShader
@@ -104,7 +105,8 @@
                 float4 color : COLOR;
             };
         
-            float _ShadowFalloff;
+            //float _ShadowFalloff;
+            float _ShadowStrength;
             float _GroundHeight;
         
             float3 ShadowProjectPos(float3 worldPos, float3 lightDir)
@@ -138,10 +140,10 @@
                 float3 center = float3(unity_ObjectToWorld[0].w, groundHeight, unity_ObjectToWorld[2].w);
                 
                 // 计算阴影衰减
-                float falloff = 1 - saturate(distance(shadowPos, center) * _ShadowFalloff);
+                //float falloff = 1 - saturate(distance(shadowPos, center) * _ShadowFalloff);
         
                 // 阴影颜色
-                o.color = fixed4(0, 0, 0, falloff);
+                o.color = fixed4(0, 0, 0, _ShadowStrength);
         
                 return o;
             }
