@@ -81,6 +81,6 @@
             ENDCG
         }
     }
-    
+    FallBack "VertexLit"
     CustomEditor "PBRShaderGUI"
 }
