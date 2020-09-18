@@ -114,9 +114,8 @@
                 float3 shadowPos;
         
                 // 阴影的世界空间坐标（低于地面的部分不做改变）
-                float groundHeight = 0;
-                shadowPos.y = min(worldPos .y , groundHeight);
-                shadowPos.xz = worldPos.xz - lightDir.xz * max(0 , worldPos.y - groundHeight) / lightDir.y; 
+                shadowPos.y = min(worldPos .y , _GroundHeight);
+                shadowPos.xz = worldPos.xz - lightDir.xz * max(0 , worldPos.y - _GroundHeight) / lightDir.y; 
         
                 return shadowPos;
             }
@@ -135,11 +134,8 @@
                 // 转换到裁切空间
                 o.vertex = UnityWorldToClipPos(shadowPos);
         
-                // 得到中心点世界坐标
-                float groundHeight = 0;
-                float3 center = float3(unity_ObjectToWorld[0].w, groundHeight, unity_ObjectToWorld[2].w);
-                
                 // 计算阴影衰减
+                //float3 center = float3(unity_ObjectToWorld[0].w, _GroundHeight, unity_ObjectToWorld[2].w);
                 //float falloff = 1 - saturate(distance(shadowPos, center) * _ShadowFalloff);
         
                 // 阴影颜色
