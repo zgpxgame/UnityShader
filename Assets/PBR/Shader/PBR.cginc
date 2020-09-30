@@ -121,15 +121,6 @@ half3 LerpWhiteTo(half3 b, half t)
     return half3(oneMinusT, oneMinusT, oneMinusT) + b * t;
 }
 
-half3 UnpackScaleNormalDXT5nm(half4 packednormal, half bumpScale)
-{
-    half3 normal;
-    normal.xy = (packednormal.wy * 2 - 1);
-    normal.xy *= bumpScale;
-    normal.z = sqrt(1.0 - saturate(dot(normal.xy, normal.xy)));
-    return normal;
-}
-
 half3 UnpackScaleNormalRGorAG(half4 packednormal, half bumpScale)
 {
     #if defined(UNITY_NO_DXT5nm)
@@ -1146,7 +1137,7 @@ VertexOutputForwardBase vertForwardBase (VertexInput v)
 
 half4 fragForwardBase (VertexOutputForwardBase i) : SV_Target
 {
-FRAGMENT_SETUP(s)
+    FRAGMENT_SETUP(s)
 
     UNITY_SETUP_INSTANCE_ID(i);
 
