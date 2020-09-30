@@ -20,7 +20,6 @@
 // UNITY_SPECCUBE_BOX_PROJECTION:                   TierSettings.reflectionProbeBoxProjection
 // UNITY_SPECCUBE_BLENDING:                         TierSettings.reflectionProbeBlending
 // UNITY_ENABLE_DETAIL_NORMALMAP:                   TierSettings.detailNormalMap
-// UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS:  TierSettings.semitransparentShadows
 
 // disregarding what is set in TierSettings, some features have hardware restrictions
 // so we still add safety net, otherwise we might end up with shaders failing to compile
@@ -29,28 +28,11 @@
     // For surface shader code analysis pass, disable some features that don't affect inputs/outputs
     #undef UNITY_SPECCUBE_BOX_PROJECTION
     #undef UNITY_SPECCUBE_BLENDING
-    #undef UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS
-#elif SHADER_TARGET < 30
-    #undef UNITY_SPECCUBE_BOX_PROJECTION
-    #undef UNITY_SPECCUBE_BLENDING
-    #undef UNITY_ENABLE_DETAIL_NORMALMAP
-    #ifdef _PARALLAXMAP
-        #undef _PARALLAXMAP
-    #endif
-#endif
-#if (SHADER_TARGET < 30) || defined(SHADER_API_GLES)
-    #undef UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS
 #endif
 
 #ifndef UNITY_SAMPLE_FULL_SH_PER_PIXEL
     // Lightmap UVs and ambient color from SHL2 are shared in the vertex to pixel interpolators. Do full SH evaluation in the pixel shader when static lightmap and LIGHTPROBE_SH is enabled.
     #define UNITY_SAMPLE_FULL_SH_PER_PIXEL (LIGHTMAP_ON && LIGHTPROBE_SH)
-
-    // Shaders might fail to compile due to shader instruction count limit. Leave only baked lightmaps on SM20 hardware.
-    #if UNITY_SAMPLE_FULL_SH_PER_PIXEL && (SHADER_TARGET < 25)
-        #undef UNITY_SAMPLE_FULL_SH_PER_PIXEL
-        #undef LIGHTPROBE_SH
-    #endif
 #endif
 
 
@@ -107,17 +89,10 @@ inline half3 PreMultiplyAlpha (half3 diffColor, half alpha, half oneMinusReflect
         // Transparency 'removes' from Diffuse component
         diffColor *= alpha;
 
-        #if (SHADER_TARGET < 30)
-            // SM2.0: instruction count limitation
-            // Instead will sacrifice part of physically based transparency where amount Reflectivity is affecting Transparency
-            // SM2.0: uses unmodified alpha
-            outModifiedAlpha = alpha;
-        #else
-            // Reflectivity 'removes' from the rest of components, including Transparency
-            // outAlpha = 1-(1-alpha)*(1-reflectivity) = 1-(oneMinusReflectivity - alpha*oneMinusReflectivity) =
-            //          = 1-oneMinusReflectivity + alpha*oneMinusReflectivity
-            outModifiedAlpha = 1-oneMinusReflectivity + alpha*oneMinusReflectivity;
-        #endif
+        // Reflectivity 'removes' from the rest of components, including Transparency
+        // outAlpha = 1-(1-alpha)*(1-reflectivity) = 1-(oneMinusReflectivity - alpha*oneMinusReflectivity) =
+        //          = 1-oneMinusReflectivity + alpha*oneMinusReflectivity
+        outModifiedAlpha = 1-oneMinusReflectivity + alpha*oneMinusReflectivity;
     #else
         outModifiedAlpha = alpha;
     #endif
@@ -150,11 +125,7 @@ half3 UnpackScaleNormalDXT5nm(half4 packednormal, half bumpScale)
 {
     half3 normal;
     normal.xy = (packednormal.wy * 2 - 1);
-    #if (SHADER_TARGET >= 30)
-        // SM2.0: instruction count limitation
-        // SM2.0: normal scaler is not supported
-        normal.xy *= bumpScale;
-    #endif
+    normal.xy *= bumpScale;
     normal.z = sqrt(1.0 - saturate(dot(normal.xy, normal.xy)));
     return normal;
 }
@@ -163,11 +134,7 @@ half3 UnpackScaleNormalRGorAG(half4 packednormal, half bumpScale)
 {
     #if defined(UNITY_NO_DXT5nm)
         half3 normal = packednormal.xyz * 2 - 1;
-        #if (SHADER_TARGET >= 30)
-            // SM2.0: instruction count limitation
-            // SM2.0: normal scaler is not supported
-            normal.xy *= bumpScale;
-        #endif
+        normal.xy *= bumpScale;
         return normal;
     #else
         // This do the trick
@@ -175,11 +142,7 @@ half3 UnpackScaleNormalRGorAG(half4 packednormal, half bumpScale)
 
         half3 normal;
         normal.xy = (packednormal.xy * 2 - 1);
-        #if (SHADER_TARGET >= 30)
-            // SM2.0: instruction count limitation
-            // SM2.0: normal scaler is not supported
-            normal.xy *= bumpScale;
-        #endif
+        normal.xy *= bumpScale;
         normal.z = sqrt(1.0 - saturate(dot(normal.xy, normal.xy)));
         return normal;
     #endif
@@ -209,9 +172,6 @@ half3 ShadeSHPerVertex (half3 normal, half3 ambient)
     #if UNITY_SAMPLE_FULL_SH_PER_PIXEL
         // Completely per-pixel
         // nothing to do here
-    #elif (SHADER_TARGET < 30)
-        // Completely per-vertex
-        ambient += max(half3(0,0,0), ShadeSH9 (half4(normal, 1.0)));
     #else
         // L2 per-vertex, L0..L1 & gamma-correction per-pixel
 
@@ -248,9 +208,6 @@ half3 ShadeSHPerPixel (half3 normal, half3 ambient, float3 worldPos)
         #ifdef UNITY_COLORSPACE_GAMMA
             ambient = LinearToGammaSpace(ambient);
         #endif
-    #elif (SHADER_TARGET < 30)
-        // Completely per-vertex
-        // nothing to do here. Gamma conversion on ambient from SH takes place in the vertex shader, see ShadeSHPerVertex.
     #else
         // L2 per-vertex, L0..L1 & gamma-correction per-pixel
         // Ambient in this case is expected to be always Linear, see ShadeSHPerVertex()
@@ -388,13 +345,7 @@ half3 Albedo(float4 texcoords)
 {
     half3 albedo = _Color.rgb * tex2D (_MainTex, texcoords.xy).rgb;
 #if _DETAIL
-    #if (SHADER_TARGET < 30)
-        // SM20: instruction count limitation
-        // SM20: no detail mask
-        half mask = 1;
-    #else
-        half mask = DetailMask(texcoords.xy);
-    #endif
+    half mask = DetailMask(texcoords.xy);
     half3 detailAlbedo = tex2D (_DetailAlbedoMap, texcoords.zw).rgb;
     #if _DETAIL_MULX2
         albedo *= LerpWhiteTo (detailAlbedo * unity_ColorSpaceDouble.rgb, mask);
@@ -420,14 +371,8 @@ half Alpha(float2 uv)
 
 half Occlusion(float2 uv)
 {
-#if (SHADER_TARGET < 30)
-    // SM20: instruction count limitation
-    // SM20: simpler occlusion
-    return tex2D(_OcclusionMap, uv).g;
-#else
     half occ = tex2D(_OcclusionMap, uv).g;
     return LerpOneTo (occ, _OcclusionStrength);
-#endif
 }
 
 half4 SpecularGloss(float2 uv)
@@ -511,7 +456,7 @@ half3 NormalInTangentSpace(float4 texcoords)
 
 float4 Parallax (float4 texcoords, half3 viewDir)
 {
-#if !defined(_PARALLAXMAP) || (SHADER_TARGET < 30)
+#if !defined(_PARALLAXMAP)
     // Disable parallax on pre-SM3.0 shader target models
     return texcoords;
 #else
@@ -776,11 +721,7 @@ inline void ResetUnityLight(out UnityLight outLight)
 
 inline half DotClamped (half3 a, half3 b)
 {
-    #if (SHADER_TARGET < 30)
-        return saturate(dot(a, b));
-    #else
-        return max(0.0h, dot(a, b));
-    #endif
+    return max(0.0h, dot(a, b));
 }
 
 inline half LambertTerm (half3 normal, half3 lightDir)
