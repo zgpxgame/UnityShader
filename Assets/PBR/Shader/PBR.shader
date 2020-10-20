@@ -1,4 +1,4 @@
-﻿Shader "PBR (Specular setup)"
+﻿Shader "Custom/PBR (Specular setup)"
 {
     Properties
     {
