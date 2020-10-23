@@ -184,8 +184,9 @@
                 half4 col = tex2D(_MainTex, i.uv) * _Color;
                 half3 albedo = col.rgb;
                 half alpha = col.a;
-                half metallic = tex2D(_Metallic, i.uv);
-                half roughness = tex2D(_Roughness, i.uv);
+                half2 metallicGloss = tex2D(_Metallic, i.uv).bg;
+                half metallic = metallicGloss.x;
+                half roughness = metallicGloss.y;
                 half3 normal = WorldNormal(UnpackNormal(tex2D(_BumpMap, i.uv), _BumpScale), i.tangentToWorldAndPackedData);
                 
                 half3 dielectricSpec = half3(0.04, 0.04, 0.04);
@@ -199,7 +200,7 @@
                 
                 half3 color = BRDF(diffColor, specColor, roughness, normal, lightDir, viewDir) * lightColor;
                 
-                return half4(color, alpha);
+                return half4(color,1);
             }
             ENDCG
         }
