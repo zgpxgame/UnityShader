@@ -1,19 +1,17 @@
-﻿Shader "Custom/SimplePBR"
+﻿Shader "Custom/SimplePBR (Metallic setup)"
 {
     Properties
     {
         _Color("Color", Color) = (1,1,1,1)
-        _MainTex("Albedo", 2D) = "white" {}
+        [NoScaleOffset]_MainTex("Albedo", 2D) = "white" {}
         
-        _Metallic("Metallic", 2D) = "white" {}
+        [NoScaleOffset]_MetallicGloss("Metallic(R) Gloss(A)", 2D) = "white" {}
 
-        _BumpScale("Scale", Float) = 1.0
-        _BumpMap("Normal Map", 2D) = "bump" {}
+        _BumpScale("Normal Scale", Float) = 1.0
+        [NoScaleOffset]_BumpMap("Normal Map", 2D) = "bump" {}
 
-        _OcclusionStrength("Strength", Range(0.0, 1.0)) = 1.0
-        _OcclusionMap("Occlusion", 2D) = "white" {}
-        
-        _Roughness("Roughness", 2D) = "white" {}
+        _OcclusionStrength("Occlusion Strength", Range(0.0, 1.0)) = 1.0
+        [NoScaleOffset]_OcclusionMap("Occlusion", 2D) = "white" {}
     }
     SubShader
     {
@@ -48,15 +46,13 @@
             sampler2D _MainTex;
             float4 _MainTex_ST;
             
-            sampler2D _Metallic;
+            sampler2D _MetallicGloss;
             
             float _BumpScale;
             sampler2D _BumpMap;
             
             float _OcclusionStrength;
             sampler2D _OcclusionMap;
-            
-            sampler2D _Roughness;
             
             fixed4 _LightColor0;
             
@@ -101,13 +97,6 @@
             
                 float3 normalWorld = normalize(float3(tangent * normalTangent.x + binormal * normalTangent.y + normal * normalTangent.z));
                 return normalWorld;
-            }
-
-            half3 UnpackNormal(half4 packednormal, half bumpScale)
-            {
-                half3 normal = packednormal.xyz * 2 - 1;
-                normal.xy *= bumpScale;
-                return normal;
             }
             
             inline half Pow5 (half x)
@@ -179,27 +168,44 @@
                 return color;
             }
 
+            half3 UnpackScaleNormal(half4 packednormal, half bumpScale)
+            {
+                // This do the trick
+                packednormal.x *= packednormal.w;
+            
+                half3 normal;
+                normal.xy = (packednormal.xy * 2 - 1);
+                normal.xy *= bumpScale;
+                normal.z = sqrt(1.0 - saturate(dot(normal.xy, normal.xy)));
+                return normal;
+            }
+
             fixed4 frag (v2f i) : SV_Target
             {
                 half4 col = tex2D(_MainTex, i.uv) * _Color;
                 half3 albedo = col.rgb;
-                half alpha = col.a;
-                half2 metallicGloss = tex2D(_Metallic, i.uv).bg;
-                half metallic = metallicGloss.x;
-                half roughness = metallicGloss.y;
-                half3 normal = WorldNormal(UnpackNormal(tex2D(_BumpMap, i.uv), _BumpScale), i.tangentToWorldAndPackedData);
+                half4 metallicGloss = tex2D(_MetallicGloss, i.uv);
+                half metallic = metallicGloss.r;
+                half roughness = 1 - metallicGloss.a;
+                half3 normalTangent = UnpackScaleNormal(tex2D (_BumpMap, i.uv), _BumpScale);
+                half3 worldNormal = WorldNormal(normalTangent, i.tangentToWorldAndPackedData);
                 
                 half3 dielectricSpec = half3(0.04, 0.04, 0.04);
                 half oneMinusReflectivity = 1 - lerp(dielectricSpec.r, 1, metallic);
                 half3 specColor = lerp(dielectricSpec.rgb, albedo, metallic);
                 half3 diffColor = albedo * oneMinusReflectivity;
                 
-                float3 viewDir = i.eyeVec;
+                float3 viewDir = -normalize(i.eyeVec.xyz);
                 float3 lightDir = _WorldSpaceLightPos0.xyz;
                 half3 lightColor = _LightColor0.rgb;
                 
-                half3 color = BRDF(diffColor, specColor, roughness, normal, lightDir, viewDir) * lightColor;
+                half3 color = BRDF(diffColor, specColor, roughness, worldNormal, lightDir, viewDir) * lightColor;
                 
+                // ambient diffuse
+                half3 ambient = SHEvalLinearL0L1 (half4(worldNormal, 1.0));
+                ambient += SHEvalLinearL2(half4(worldNormal, 1.0));
+                color += max(half3(0, 0, 0), ambient);
+            
                 return half4(color,1);
             }
             ENDCG
