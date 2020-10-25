@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: mat_barrel_01_My
-  m_Shader: {fileID: 4800000, guid: 67773a6e8b9cb433fa83a272cc71129a, type: 3}
+  m_Shader: {fileID: 4800000, guid: 8f63cb46f624544709120aac05aa2405, type: 3}
   m_ShaderKeywords: _DETAIL_MULX2 _EMISSION _LIGHTMAPPING_DYNAMIC_LIGHTMAPS _LIGHTMAPPING_REALTIME
     _NORMALMAP _SPECGLOSSMAP _UVSEC_UV1
   m_LightmapFlags: 1
