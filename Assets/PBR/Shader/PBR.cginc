@@ -206,7 +206,7 @@ half3 ShadeSHPerPixel (half3 normal, half3 ambient, float3 worldPos)
             if (unity_ProbeVolumeParams.x == 1.0)
                 ambient_contrib = SHEvalLinearL0L1_SampleProbeVolume (half4(normal, 1.0), worldPos);
             else
-                ambient_contrib = SHEvalLinearL0L1 (half4(normal, 1.0));
+                ambient_contrib = SHEvalLinearL0L1 (half4(normal, 1.0)); // <- 
         #else
             ambient_contrib = SHEvalLinearL0L1 (half4(normal, 1.0));
         #endif

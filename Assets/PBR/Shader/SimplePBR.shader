@@ -9,6 +9,8 @@
 
         _BumpScale("Normal Scale", Float) = 1.0
         [NoScaleOffset]_BumpMap("Normal Map", 2D) = "bump" {}
+        
+        [NoScaleOffset]_EmissionMap("Emission", 2D) = "white" {}
 
         _OcclusionStrength("Occlusion Strength", Range(0.0, 1.0)) = 1.0
         [NoScaleOffset]_OcclusionMap("Occlusion", 2D) = "white" {}
@@ -20,6 +22,8 @@
 
         Pass
         {
+            Tags { "LightMode"="ForwardBase" }
+        
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -50,6 +54,8 @@
             
             float _BumpScale;
             sampler2D _BumpMap;
+            
+            sampler2D _EmissionMap;
             
             float _OcclusionStrength;
             sampler2D _OcclusionMap;
@@ -146,7 +152,7 @@
                 return lightScatter * viewScatter;
             }
             
-            half3 BRDF(half3 diffColor, half3 specColor, half perceptualRoughness, float3 normal, float3 lightDir, float3 viewDir)
+            half3 BRDF(half3 diffColor, half3 specColor, half perceptualRoughness, float3 normal, float3 lightDir, half3 lightColor, float3 viewDir, half3 giDiffuse)
             {
                 float3 halfDir = SafeNormalize (lightDir + viewDir);
                 half nv = abs(dot(normal, viewDir));
@@ -164,7 +170,8 @@
                 float specularTerm = V*D * UNITY_PI;
                 specularTerm = max(0, specularTerm * nl);
                 
-                half3 color = diffColor * diffuseTerm + FresnelTerm (specColor, lh) * specularTerm;
+                half3 color = diffColor * (giDiffuse + lightColor * diffuseTerm)
+                              + FresnelTerm(specColor, lh) * lightColor * specularTerm;
                 return color;
             }
 
@@ -199,14 +206,13 @@
                 float3 lightDir = _WorldSpaceLightPos0.xyz;
                 half3 lightColor = _LightColor0.rgb;
                 
-                half3 color = BRDF(diffColor, specColor, roughness, worldNormal, lightDir, viewDir) * lightColor;
-                
                 // ambient diffuse
-                half3 ambient = SHEvalLinearL0L1 (half4(worldNormal, 1.0));
-                ambient += SHEvalLinearL2(half4(worldNormal, 1.0));
-                color += max(half3(0, 0, 0), ambient);
-            
-                return half4(color,1);
+                half3 ambient = ShadeSH9(half4(worldNormal,1));
+                
+                half3 color = BRDF(diffColor, specColor, roughness, worldNormal, lightDir, lightColor, viewDir, ambient);
+                color += tex2D(_EmissionMap, i.uv).rgb;
+                
+                return half4(color, 1);
             }
             ENDCG
         }
