@@ -206,7 +206,7 @@
                 float3 lightDir = _WorldSpaceLightPos0.xyz;
                 half3 lightColor = _LightColor0.rgb;
                 
-                // ambient diffuse
+                // 环境漫反射光
                 half3 ambient = ShadeSH9(half4(worldNormal,1));
                 
                 half3 color = BRDF(diffColor, specColor, roughness, worldNormal, lightDir, lightColor, viewDir, ambient);
