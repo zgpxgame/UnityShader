@@ -218,3 +218,9 @@
         }
     }
 }
+
+// 遇到的问题
+// 1. 线性空间 会有一点点亮度区别
+// 2. eyeVec转viewDir 方向错误
+// 3. UnpackNormal 写错使世界空间法线出错
+// 4. LightMode ForwardBase中才有一些内置的变量定义，其他pass会缺失一部分内置变量，比如ShadeSH9不起作用的原因是其中一部分的内置变量值为0
