@@ -1,0 +1,8 @@
+Simplified versions of the shaders meant to be used
+in mobile devices. 
+
+Aniso_Circular_mobile shader has been tested to run well
+on iOS devices like ipad 2, ipad 3 and ipad mini
+ 
+Also included are no alpha versions of shaders that
+will run even faster. 

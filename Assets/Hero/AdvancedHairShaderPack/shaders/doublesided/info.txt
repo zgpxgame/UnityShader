@@ -1,0 +1,10 @@
+These shaders are the same as main except:
+
+noCull : draws both sides of mesh 
+
+noCull_correctNormal :  draws both sides of mesh, but draws
+                        the back side with flipped normals
+
+It is better to just make duplicate geometry facing the
+opposite direction. But you can use these shaders instead.
+

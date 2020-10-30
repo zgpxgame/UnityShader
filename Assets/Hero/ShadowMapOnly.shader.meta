@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: 39e7f8a9f4f1b41568fc1ff39b970137
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: assets/main/shader/shadowmaponly
+  assetBundleVariant: bundle

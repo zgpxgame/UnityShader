@@ -1,0 +1,29 @@
+Shaders in root folder are the main shaders, some notes:
+
+* Kajiya and Scheuermann both expect your hairs uv's 
+to be laid out in vertical direction to get correct 
+highlights -- if your hair is laid out horizontally, consider flipping it or use the uDirection shaders. 
+
+* The textures all share the same uv space for optimization
+meaning you cant change the tiling or offset of one texture
+with out messing with the others.
+
+*All the shaders should support direct3d 11 now, except
+the mobile ones of course
+
+*the shader is mixing alpha blend and alpha cut, you could choose 
+one or the other but alpha blend by itself wont sort properly and 
+alpha cut wont get you any gradients.
+So the idea is to mix it. You use cut for most of the hair and blend 
+for the edges. You do get occasional "dirty edges" specially hair on 
+top of hair, but the effect works most of the time.
+ 
+In order to get the best quality, you need to get to a high
+alpha cut value, something like .9 to .99.You just have to 
+make sure that your alpha is very "strong" look at the sample 
+one the alpha channel of the diffuse, notice how most of the 
+hair is white. 
+
+
+
+ 

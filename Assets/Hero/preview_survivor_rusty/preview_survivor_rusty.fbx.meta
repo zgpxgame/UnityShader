@@ -1,0 +1,290 @@
+fileFormatVersion: 2
+guid: 02f8c31dbab89459981e1fea304bbea2
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: Bip001
+    100002: Bip001 Head
+    100004: Bip001 huxu
+    100006: Bip001 L Calf
+    100008: Bip001 L Clavicle
+    100010: Bip001 L eye
+    100012: Bip001 L eyeliddown
+    100014: Bip001 L eyelidup
+    100016: Bip001 L Finger0
+    100018: Bip001 L Finger01
+    100020: Bip001 L Finger1
+    100022: Bip001 L Finger11
+    100024: Bip001 L Finger2
+    100026: Bip001 L Finger21
+    100028: Bip001 L Finger3
+    100030: Bip001 L Finger31
+    100032: Bip001 L Finger4
+    100034: Bip001 L Finger41
+    100036: Bip001 L Foot
+    100038: Bip001 L Forearm
+    100040: Bip001 L ForeTwist1
+    100042: Bip001 L geisoma
+    100044: Bip001 L Hand
+    100046: 'Bip001 L mouth '
+    100048: Bip001 L Thigh
+    100050: Bip001 L Toe0
+    100052: Bip001 L UpperArm
+    100054: Bip001 LThighTwist
+    100056: Bip001 LUpArmTwist
+    100058: Bip001 mouth
+    100060: Bip001 Neck
+    100062: Bip001 Pelvis
+    100064: Bip001 R Calf
+    100066: Bip001 R Clavicle
+    100068: Bip001 R eye
+    100070: Bip001 R eyeliddown
+    100072: Bip001 R eyelidup
+    100074: Bip001 R Finger0
+    100076: Bip001 R Finger01
+    100078: Bip001 R Finger1
+    100080: Bip001 R Finger11
+    100082: Bip001 R Finger2
+    100084: Bip001 R Finger21
+    100086: Bip001 R Finger3
+    100088: Bip001 R Finger31
+    100090: Bip001 R Finger4
+    100092: Bip001 R Finger41
+    100094: Bip001 R Foot
+    100096: Bip001 R Forearm
+    100098: Bip001 R ForeTwist1
+    100100: Bip001 R geisoma
+    100102: Bip001 R Hand
+    100104: 'Bip001 R mouth '
+    100106: Bip001 R Thigh
+    100108: Bip001 R Toe0
+    100110: Bip001 R UpperArm
+    100112: Bip001 RThighTwist
+    100114: Bip001 RUpArmTwist
+    100116: Bip001 Spine
+    100118: Bip001 Spine1
+    100120: Bip001 Spine2
+    100122: bone glasses
+    100124: Bone011
+    100126: Bone012
+    100128: fbx_hero_rusty_body
+    100130: fbx_hero_rusty_equipment
+    100132: fbx_hero_rusty_equipment02
+    100134: fbx_hero_rusty_eye
+    100136: fbx_hero_rusty_glasses
+    100138: fbx_hero_rusty_hair
+    100140: fbx_hero_rusty_weapon
+    100142: fbx_preview_survivor_rusty
+    100144: FBXRoot
+    100146: //RootNode
+    100148: root
+    100150: weapon
+    100152: weapon_02
+    400000: Bip001
+    400002: Bip001 Head
+    400004: Bip001 huxu
+    400006: Bip001 L Calf
+    400008: Bip001 L Clavicle
+    400010: Bip001 L eye
+    400012: Bip001 L eyeliddown
+    400014: Bip001 L eyelidup
+    400016: Bip001 L Finger0
+    400018: Bip001 L Finger01
+    400020: Bip001 L Finger1
+    400022: Bip001 L Finger11
+    400024: Bip001 L Finger2
+    400026: Bip001 L Finger21
+    400028: Bip001 L Finger3
+    400030: Bip001 L Finger31
+    400032: Bip001 L Finger4
+    400034: Bip001 L Finger41
+    400036: Bip001 L Foot
+    400038: Bip001 L Forearm
+    400040: Bip001 L ForeTwist1
+    400042: Bip001 L geisoma
+    400044: Bip001 L Hand
+    400046: 'Bip001 L mouth '
+    400048: Bip001 L Thigh
+    400050: Bip001 L Toe0
+    400052: Bip001 L UpperArm
+    400054: Bip001 LThighTwist
+    400056: Bip001 LUpArmTwist
+    400058: Bip001 mouth
+    400060: Bip001 Neck
+    400062: Bip001 Pelvis
+    400064: Bip001 R Calf
+    400066: Bip001 R Clavicle
+    400068: Bip001 R eye
+    400070: Bip001 R eyeliddown
+    400072: Bip001 R eyelidup
+    400074: Bip001 R Finger0
+    400076: Bip001 R Finger01
+    400078: Bip001 R Finger1
+    400080: Bip001 R Finger11
+    400082: Bip001 R Finger2
+    400084: Bip001 R Finger21
+    400086: Bip001 R Finger3
+    400088: Bip001 R Finger31
+    400090: Bip001 R Finger4
+    400092: Bip001 R Finger41
+    400094: Bip001 R Foot
+    400096: Bip001 R Forearm
+    400098: Bip001 R ForeTwist1
+    400100: Bip001 R geisoma
+    400102: Bip001 R Hand
+    400104: 'Bip001 R mouth '
+    400106: Bip001 R Thigh
+    400108: Bip001 R Toe0
+    400110: Bip001 R UpperArm
+    400112: Bip001 RThighTwist
+    400114: Bip001 RUpArmTwist
+    400116: Bip001 Spine
+    400118: Bip001 Spine1
+    400120: Bip001 Spine2
+    400122: bone glasses
+    400124: Bone011
+    400126: Bone012
+    400128: fbx_hero_rusty_body
+    400130: fbx_hero_rusty_equipment
+    400132: fbx_hero_rusty_equipment02
+    400134: fbx_hero_rusty_eye
+    400136: fbx_hero_rusty_glasses
+    400138: fbx_hero_rusty_hair
+    400140: fbx_hero_rusty_weapon
+    400142: fbx_preview_survivor_rusty
+    400144: FBXRoot
+    400146: //RootNode
+    400148: root
+    400150: weapon
+    400152: weapon_02
+    2100000: mat_preview_survivor_rusty_body
+    2100002: mat_preview_survivor_rusty_Equipment
+    2100004: mat_preview_survivor_rusty_Equipment_2side
+    2100006: mat_preview_survivor_rusty_Glasses
+    2100008: mat_preview_survivor_rusty_hair
+    4300000: fbx_hero_rusty_body
+    4300002: fbx_hero_rusty_equipment
+    4300004: fbx_hero_rusty_equipment02
+    4300006: fbx_hero_rusty_eye
+    4300008: fbx_hero_rusty_glasses
+    4300010: fbx_hero_rusty_hair
+    4300012: fbx_hero_rusty_weapon
+    9500000: //RootNode
+    13700000: fbx_hero_rusty_body
+    13700002: fbx_hero_rusty_equipment
+    13700004: fbx_hero_rusty_equipment02
+    13700006: fbx_hero_rusty_eye
+    13700008: fbx_hero_rusty_glasses
+    13700010: fbx_hero_rusty_hair
+    13700012: fbx_hero_rusty_weapon
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_preview_survivor_rusty_Equipment
+    second: {fileID: 2100000, guid: 3dfd21d0b69ac416eae4bed62791b1a0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_preview_survivor_rusty_Equipment_2side
+    second: {fileID: 2100000, guid: ad0feaa733fd849a9a697a78ae2ffc12, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_preview_survivor_rusty_Glasses
+    second: {fileID: 2100000, guid: 7fdade9664f0744799023ddf2c8e8c36, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_preview_survivor_rusty_body
+    second: {fileID: 2100000, guid: 44431a7ca3568431fb0d895795223b93, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_preview_survivor_rusty_hair
+    second: {fileID: 2100000, guid: 430d6ed9f0ca845b595cb7de42a51971, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: assets/art/model/survivor/preview_survivor_rusty
+  assetBundleVariant: bundle

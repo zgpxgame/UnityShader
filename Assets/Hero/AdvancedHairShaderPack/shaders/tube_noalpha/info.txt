@@ -1,0 +1,4 @@
+These shaders are meant to be used when 
+your geometry doesnt need alphas, mainly
+the case where you are drawing tube hair
+instead of planes.

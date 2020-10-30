@@ -1,0 +1,3 @@
+These shaders are the same as main except:
+
+They have an added normal map texture
