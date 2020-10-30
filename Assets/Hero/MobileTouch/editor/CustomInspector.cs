@@ -14,7 +14,7 @@ using UnityEditor;
 
 namespace BitBenderGames {
 
-  public class CustomInspector : Editor {
+  public class CustomInspector : UnityEditor.Editor {
 
     protected const float sizeLabel = 100;
     protected const float sizeFloatInput = 70;
