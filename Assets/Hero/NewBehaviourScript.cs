@@ -146,15 +146,15 @@ public class NewBehaviourScript : MonoBehaviour
         //var sceneAsset = bundle.LoadAsset<GameObject>("assets/__artdata/_resources/_precache/prefab/preview/survivor/survivor_preview_scene.prefab");
         //var sceneObj = Instantiate(sceneAsset);
 
-        yield return StartCoroutine(LoadBundle("ota+preview_survivor_jane"));
-        bundle = GetBundle("ota+preview_survivor_jane");
+        yield return StartCoroutine(LoadBundle("ota+preview_survivor_travis"));
+        bundle = GetBundle("ota+preview_survivor_travis");
 #if UNITY_EDITOR
         foreach (var i in bundle.GetAllAssetNames())
         {
             Debug.Log(i);
         }
 #endif
-        var heroAsset = bundle.LoadAsset<GameObject>("assets/__artdata/_resources/prefab/hero/preview_survivor_jane.prefab");
+        var heroAsset = bundle.LoadAsset<GameObject>("assets/__artdata/_resources/prefab/hero/preview_survivor_travis.prefab");
         //var cam = sceneObj.GetComponentInChildren<Camera>();
         //cam.cullingMask = -1;
         var heroObj = Instantiate(heroAsset);
