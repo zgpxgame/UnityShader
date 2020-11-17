@@ -15,6 +15,7 @@
         _OcclusionStrength("Occlusion Strength", Range(0.0, 1.0)) = 1.0
         [NoScaleOffset]_OcclusionMap("Occlusion", 2D) = "white" {}
     }
+    
     SubShader
     {
         Tags { "RenderType"="Opaque" }
@@ -109,11 +110,23 @@
             {
                 return x*x * x*x * x;
             }
+            
+            half LerpOneTo(half b, half t)
+            {
+                half oneMinusT = 1 - t;
+                return oneMinusT + b * t;
+            }
 
             inline half3 FresnelTerm (half3 F0, half cosA)
             {
-                half t = Pow5 (1 - cosA);   // ala Schlick interpoliation
+                half t = Pow5 (1 - cosA);
                 return F0 + (1-F0) * t;
+            }
+            
+            inline half3 FresnelLerp (half3 F0, half3 F90, half cosA)
+            {
+                half t = Pow5 (1 - cosA);
+                return lerp (F0, F90, t);
             }
 
             inline float GGXTerm (float NdotH, float roughness)
@@ -152,29 +165,6 @@
                 return lightScatter * viewScatter;
             }
             
-            half3 BRDF(half3 diffColor, half3 specColor, half perceptualRoughness, float3 normal, float3 lightDir, half3 lightColor, float3 viewDir, half3 giDiffuse)
-            {
-                float3 halfDir = SafeNormalize (lightDir + viewDir);
-                half nv = abs(dot(normal, viewDir));
-                float nl = saturate(dot(normal, lightDir));
-                float nh = saturate(dot(normal, halfDir));
-                half lv = saturate(dot(lightDir, viewDir));
-                half lh = saturate(dot(lightDir, halfDir));
-                
-                half diffuseTerm = DisneyDiffuse(nv, nl, lh, perceptualRoughness) * nl;
-                
-                float roughness = PerceptualRoughnessToRoughness(perceptualRoughness);
-                roughness = max(roughness, 0.002);
-                float V = SmithJointGGXVisibilityTerm (nl, nv, roughness);
-                float D = GGXTerm (nh, roughness);
-                float specularTerm = V*D * UNITY_PI;
-                specularTerm = max(0, specularTerm * nl);
-                
-                half3 color = diffColor * (giDiffuse + lightColor * diffuseTerm)
-                              + FresnelTerm(specColor, lh) * lightColor * specularTerm;
-                return color;
-            }
-
             half3 UnpackScaleNormal(half4 packednormal, half bumpScale)
             {
                 // This do the trick
@@ -191,9 +181,11 @@
             {
                 half4 col = tex2D(_MainTex, i.uv) * _Color;
                 half3 albedo = col.rgb;
+                half alpha = col.a;
                 half4 metallicGloss = tex2D(_MetallicGloss, i.uv);
                 half metallic = metallicGloss.r;
-                half roughness = 1 - metallicGloss.a;
+                half smoothness = metallicGloss.a;
+                half perceptualRoughness = 1 - smoothness;
                 half3 normalTangent = UnpackScaleNormal(tex2D (_BumpMap, i.uv), _BumpScale);
                 half3 worldNormal = WorldNormal(normalTangent, i.tangentToWorldAndPackedData);
                 
@@ -207,12 +199,43 @@
                 half3 lightColor = _LightColor0.rgb;
                 
                 // 环境漫反射光
-                half3 ambient = ShadeSH9(half4(worldNormal,1));
+                half occlusion = LerpOneTo(tex2D(_OcclusionMap, i.uv).g, _OcclusionStrength);
+                half3 ambient = ShadeSH9(half4(worldNormal,1)) * occlusion;
                 
-                half3 color = BRDF(diffColor, specColor, roughness, worldNormal, lightDir, lightColor, viewDir, ambient);
-                color += tex2D(_EmissionMap, i.uv).rgb;
+                // 漫反射，镜面反射
+                float3 halfDir = SafeNormalize (lightDir + viewDir);
+                half nv = abs(dot(worldNormal, viewDir));
+                float nl = saturate(dot(worldNormal, lightDir));
+                float nh = saturate(dot(worldNormal, halfDir));
+                half lv = saturate(dot(lightDir, viewDir));
+                half lh = saturate(dot(lightDir, halfDir));
                 
-                return half4(color, 1);
+                half diffuseTerm = DisneyDiffuse(nv, nl, lh, perceptualRoughness) * nl;
+                
+                float roughness = PerceptualRoughnessToRoughness(perceptualRoughness);
+                roughness = max(roughness, 0.002);
+                float V = SmithJointGGXVisibilityTerm (nl, nv, roughness);
+                float D = GGXTerm (nh, roughness);
+                float specularTerm = V*D * UNITY_PI;
+                specularTerm = max(0, specularTerm * nl);
+
+                half3 diffuse = diffColor * (ambient + lightColor * diffuseTerm);
+                half3 specular = FresnelTerm(specColor, lh) * lightColor * specularTerm;
+                
+                // 环境反射
+                half surfaceReduction = 1.0 / (roughness*roughness + 1.0);
+                half grazingTerm = saturate((1-perceptualRoughness) + (1-oneMinusReflectivity));
+                half mip = perceptualRoughness * (1.7 - 0.7 * perceptualRoughness) * 6;
+                half3 env = DecodeHDR(UNITY_SAMPLE_TEXCUBE_LOD(unity_SpecCube0, reflect(-viewDir, worldNormal), mip), unity_SpecCube0_HDR);
+                half3 specEnv = surfaceReduction * env * FresnelLerp(specColor, grazingTerm, nv);
+                
+                // 自发光
+                half3 emission = tex2D(_EmissionMap, i.uv).rgb;
+                
+                // 最终结果
+                half4 color = half4(diffuse + specular + specEnv + emission, alpha);
+                
+                return color;
             }
             ENDCG
         }
